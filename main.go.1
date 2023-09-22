@@ -1,0 +1,51 @@
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	var g, v int
+	fmt.Scan(&g, &v)
+	nodes := make(map[string]int)
+	for i := 0; i < g; i++ {
+		var ip string
+		var num int
+		fmt.Scan(&ip, &num)
+		nodes[ip] = num
+	}
+	edges := make([][]bool, g+1)
+	for k := range edges {
+		edges[k] = make([]bool, g+1)
+	}
+	for i := 0; i < v; i++ {
+		var i, j int
+		fmt.Scan(&i, &j)
+		edges[i][j] = true
+	}
+	var n int
+	fmt.Scan(&n)
+	var isConnected func(num1, num2 int) bool
+	isConnected = func(num1, num2 int) bool {
+		connected := false
+		if edges[num1][num2] {
+			return true
+		}
+		for j := 1; j <= g; j++ {
+			if edges[num1][j] {
+				connected = isConnected(j, num2)
+			}
+		}
+		return connected
+	}
+	for ; n > 0; n-- {
+		var ip1, ip2 string
+		fmt.Scan(&ip1, &ip2)
+		num1, num2 := nodes[ip1], nodes[ip2]
+		if isConnected(num1, num2) {
+			fmt.Println("Yes")
+		} else {
+			fmt.Println("No")
+		}
+	}
+}
